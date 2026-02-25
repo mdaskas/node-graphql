@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  email     String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  billingTermsId Int?
+  billingTerms   BillingTerms? @relation(fields: [billingTermsId], references: [id])
+
+  shippingTermsId Int?
+  shippingTerms   ShippingTerms? @relation(fields: [shippingTermsId], references: [id])
+
+  billToAddressId Int?     @unique
+  billToAddress   Address? @relation("BillTo", fields: [billToAddressId], references: [id])
+
+  shipToAddresses Address[] @relation("ShipTo")
+}
+
+model Address {
+  id        Int      @id @default(autoincrement())
+  street1   String
+  street2   String?
+  city      String
+  state     String
+  zip       String
+  country   String   @default("US")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Ship-to: many addresses per customer
+  shipToCustomerId Int?
+  shipToCustomer   Customer? @relation("ShipTo", fields: [shipToCustomerId], references: [id])
+
+  // Bill-to: one-to-one (inverse side)
+  billToCustomer Customer? @relation("BillTo")
+}
+
+model BillingTerms {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  description String
+  dueDays     Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customers Customer[]
+}
+
+model ShippingTerms {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  customers Customer[]
+}

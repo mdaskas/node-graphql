@@ -1,0 +1,28 @@
+npm init -y
+npm i -D typescript tsx @types/node
+npx tsc --init
+npm i @apollo/server graphql
+// Create src/schema.ts and edit
+
+git init
+
+npm i prisma @types/pg -D
+npm i @prisma/client @prisma/adapter-pg pg dotenv
+npx prisma init
+
+npx prisma migrate dev --name add_customer_table
+npx prisma generate
+
+npx prisma db seed
+
+npx prisma db pull
+npx prisma resolve --applied fix_migration_3
+
+
+npm i express@5 @as-integrations/express5 cors
+npm i -D @types/express @types/cors
+
+npm i -D eslint prettier
+npx eslint --init
+
+npm i zod
