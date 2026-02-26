@@ -1,4 +1,5 @@
 import EntityNotFoundError from '../../errors/EntityNotFoundError'
+import logger from '../../utils/logger'
 import { BillingTermsDTO, type IBillingTermsDTO } from '../dto/BiillingTermsDTO'
 import { BaseRepository } from './BaseRespository'
 import type { IBillingTermsRepository } from './IBillingTermsRepository'
@@ -27,6 +28,15 @@ export class BillingTermsRepository
             skip: offset,
             take: limit
         })
+
+        logger.debug('Fetched billing terms', {
+            count: billingTerms.length,
+            limit,
+            offset
+        })
+        logger
+            .child({ LogMetadata: `BillingTermsRepository.findAll` })
+            .debug('Billing terms data')
 
         return billingTerms.map(BillingTermsDTO.toDto)
     }
