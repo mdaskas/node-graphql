@@ -1,4 +1,3 @@
-import type { ShippingTermsModel } from '../../generated/prisma/models'
 import type { IShippingTermsDTO } from '../dto/ShippingTermsDTO'
 import type {
     CreateShippingTermsInput,

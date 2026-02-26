@@ -11,7 +11,7 @@
         "format": "prettier --write .",
         "lint": "eslint . ",
         "lint:fix": "eslint . --fix ",
-        "seed": "npx prisma db seed",
+        "prisma:seed": "npx prisma db seed",
         "studio": "npx prisma studio",
         "prisma:generate": "prisma generate",
         "prisma:migrate": "prisma migrate dev"

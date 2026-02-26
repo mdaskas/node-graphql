@@ -1,4 +1,5 @@
 import EntityNotFoundError from '../../errors/EntityNotFoundError'
+import logger from '../../utils/logger'
 import {
     ShippingTermsDTO,
     type IShippingTermsDTO
@@ -28,6 +29,15 @@ export class ShippingTermsRepository
             skip: offset,
             take: limit
         })
+        logger.debug('Fetched shipping terms', {
+            count: shippingTerms.length,
+            limit,
+            offset
+        })
+        logger
+            .child({ LogMetadata: `ShippingTermsRepository.findAll` })
+            .debug('Shipping terms data')
+
         return shippingTerms.map(ShippingTermsDTO.toDto)
     }
 
@@ -43,6 +53,11 @@ export class ShippingTermsRepository
                 code: 'ERR_NF'
             })
 
+        logger.debug('Fetched shipping term by ID', { id })
+        logger
+            .child({ LogMetadata: `ShippingTermsRepository.findById` })
+            .debug('Shipping terms data')
+
         return ShippingTermsDTO.toDto(shippingTerm)
     }
 
@@ -57,6 +72,11 @@ export class ShippingTermsRepository
                 statusCode: 404,
                 code: 'ERR_NF'
             })
+
+        logger.debug(`Fetched shipping term by Code ${code}`)
+        logger
+            .child({ LogMetadata: `ShippingTermsRepository.findByCode` })
+            .debug('Shipping terms data')
 
         return ShippingTermsDTO.toDto(shippingTerm)
     }
@@ -78,12 +98,22 @@ export class ShippingTermsRepository
             data: input
         })
 
+        logger.debug(`Updated shipping term by ID ${id}`)
+        logger
+            .child({ LogMetadata: `ShippingTermsRepository.update` })
+            .debug('Shipping terms data')
+
         return ShippingTermsDTO.toDto(shippingTerm)
     }
 
     async delete(id: number) {
         const shippingTerms = await this.findById(id)
         if (!shippingTerms) return null
+
+        logger.debug(`Deleted shipping term by ID ${id}`)
+        logger
+            .child({ LogMetadata: `ShippingTermsRepository.delete` })
+            .debug('Shipping terms data')
 
         return this.client.shippingTerms.delete({
             where: { id }

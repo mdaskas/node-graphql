@@ -67,6 +67,11 @@ export class BillingTermsRepository
                 code: 'ERR_NF'
             })
 
+        logger.debug(`Fetched billing term by Code ${code}`)
+        logger
+            .child({ LogMetadata: `BillingTermsRepository.findByCode` })
+            .debug('Billing terms data')
+
         return BillingTermsDTO.toDto(billingTerm)
     }
 
@@ -87,6 +92,11 @@ export class BillingTermsRepository
             data: input
         })
 
+        logger.debug(`Updated billing term by ID ${id}`)
+        logger
+            .child({ LogMetadata: `BillingTermsRepository.update` })
+            .debug('Billing terms data')
+
         return BillingTermsDTO.toDto(billingTerm)
     }
 
@@ -96,6 +106,11 @@ export class BillingTermsRepository
         const deletedBillingTerm = await this.client.billingTerms.delete({
             where: { id }
         })
+
+        logger.debug(`Deleted billing term by ID ${id}`)
+        logger
+            .child({ LogMetadata: `BillingTermsRepository.delete` })
+            .debug('Billing terms data')
 
         return BillingTermsDTO.toDto(deletedBillingTerm)
     }

@@ -1,4 +1,3 @@
-import type { BillingTermsModel } from '../../generated/prisma/models'
 import type { IBillingTermsDTO } from '../dto/BiillingTermsDTO'
 import type {
     CreateBillingTermsInput,
