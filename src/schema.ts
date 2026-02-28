@@ -67,12 +67,12 @@ type Mutation {
   deleteCustomer(id: ID!): Customer
 
   createBillingTerms(input: CreateBillingTermsInput!): BillingTerms!
-  updateBillingTerms(id: ID!, input: UpdateBillingTermsInput!): BillingTerms
-  deleteBillingTerms(id: ID!): BillingTerms
+  updateBillingTerms(code: ID!, input: UpdateBillingTermsInput!): BillingTerms
+  deleteBillingTerms(code: ID!): BillingTerms
 
   createShippingTerms(input: CreateShippingTermsInput!): ShippingTerms!
-  updateShippingTerms(id: ID!, input: UpdateShippingTermsInput!): ShippingTerms
-  deleteShippingTerms(id: ID!): ShippingTerms
+  updateShippingTerms(code: ID!, input: UpdateShippingTermsInput!): ShippingTerms
+  deleteShippingTerms(code: ID!): ShippingTerms
 }
 
 input CreateCustomerInput {
@@ -104,7 +104,6 @@ input CreateBillingTermsInput {
 }
 
 input UpdateBillingTermsInput {
-	code: String
 	description: String
 	dueDays: Int
 }
@@ -115,7 +114,6 @@ input CreateShippingTermsInput {
 }
 
 input UpdateShippingTermsInput {
-	code: String
 	description: String
 }
 `
@@ -128,11 +126,11 @@ const resolvers = {
         customer: (_: any, { id }: { id: number }) =>
             customerRepo.findById(parseInt(id.toString())),
         billingTerms: () => billingTermsRepo.findAll(),
-        billingTerm: (_: any, { id }: { id: number }) =>
-            billingTermsRepo.findById(parseInt(id.toString())),
+        billingTerm: (_: any, { code }: { code: string }) =>
+            billingTermsRepo.findByCode(code),
         shippingTerms: () => shippingTermsRepo.findAll(),
-        shippingTerm: (_: any, { id }: { id: number }) =>
-            shippingTermsRepo.findById(parseInt(id.toString()))
+        shippingTerm: (_: any, { code }: { code: string }) =>
+            shippingTermsRepo.findByCode(code)
     },
     Mutation: {
         createCustomer: (_: any, { input }: { input: CreateCustomerInput }) =>
@@ -150,10 +148,10 @@ const resolvers = {
         ) => billingTermsRepo.create(input),
         updateBillingTerms: (
             _: any,
-            { id, input }: { id: number; input: UpdateBillingTermsInput }
-        ) => billingTermsRepo.update(id, input),
-        deleteBillingTerms: (_: any, { id }: { id: number }) =>
-            billingTermsRepo.delete(id),
+            { code, input }: { code: string; input: UpdateBillingTermsInput }
+        ) => billingTermsRepo.update(code, input),
+        deleteBillingTerms: (_: any, { code }: { code: string }) =>
+            billingTermsRepo.delete(code),
 
         createShippingTerms: (
             _: any,
@@ -161,10 +159,10 @@ const resolvers = {
         ) => shippingTermsRepo.create(input),
         updateShippingTerms: (
             _: any,
-            { id, input }: { id: number; input: UpdateShippingTermsInput }
-        ) => shippingTermsRepo.update(id, input),
-        deleteShippingTerms: (_: any, { id }: { id: number }) =>
-            shippingTermsRepo.delete(id)
+            { code, input }: { code: string; input: UpdateShippingTermsInput }
+        ) => shippingTermsRepo.update(code, input),
+        deleteShippingTerms: (_: any, { code }: { code: string }) =>
+            shippingTermsRepo.delete(code)
     }
 }
 

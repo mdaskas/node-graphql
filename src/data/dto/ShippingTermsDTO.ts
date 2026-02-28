@@ -2,9 +2,8 @@ import { z } from 'zod'
 import { type ShippingTermsModel } from '../../generated/prisma/models'
 
 export const shippingTermsSchema = z.object({
-    id: z.number(),
     code: z.string().max(50),
-    description: z.string().max(255).optional()
+    description: z.string().max(255)
 })
 
 export type IShippingTermsDTO = z.infer<typeof shippingTermsSchema>
@@ -21,7 +20,6 @@ export const ShippingTermsDTO = {
 
     toDto: (shippingTermsEntity: ShippingTermsModel): IShippingTermsDTO => {
         return {
-            id: shippingTermsEntity.id,
             code: shippingTermsEntity.code,
             description: shippingTermsEntity.description
         }

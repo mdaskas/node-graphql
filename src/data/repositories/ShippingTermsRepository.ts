@@ -41,26 +41,6 @@ export class ShippingTermsRepository
         return shippingTerms.map(ShippingTermsDTO.toDto)
     }
 
-    async findById(id: number): Promise<IShippingTermsDTO> {
-        const shippingTerm = await this.client.shippingTerms.findUnique({
-            where: { id }
-        })
-
-        if (!shippingTerm)
-            throw new EntityNotFoundError({
-                message: `ShippingTerms for ID ${id} not found`,
-                statusCode: 404,
-                code: 'ERR_NF'
-            })
-
-        logger.debug('Fetched shipping term by ID', { id })
-        logger
-            .child({ LogMetadata: `ShippingTermsRepository.findById` })
-            .debug('Shipping terms data')
-
-        return ShippingTermsDTO.toDto(shippingTerm)
-    }
-
     async findByCode(code: string): Promise<IShippingTermsDTO> {
         const shippingTerm = await this.client.shippingTerms.findUnique({
             where: { code }
@@ -90,15 +70,15 @@ export class ShippingTermsRepository
     }
 
     async update(
-        id: number,
+        code: string,
         input: UpdateShippingTermsInput
     ): Promise<IShippingTermsDTO> {
         const shippingTerm = await this.client.shippingTerms.update({
-            where: { id },
+            where: { code },
             data: input
         })
 
-        logger.debug(`Updated shipping term by ID ${id}`)
+        logger.debug(`Updated shipping term by Code ${code}`)
         logger
             .child({ LogMetadata: `ShippingTermsRepository.update` })
             .debug('Shipping terms data')
@@ -106,17 +86,17 @@ export class ShippingTermsRepository
         return ShippingTermsDTO.toDto(shippingTerm)
     }
 
-    async delete(id: number) {
-        const shippingTerms = await this.findById(id)
+    async delete(code: string) {
+        const shippingTerms = await this.findByCode(code)
         if (!shippingTerms) return null
 
-        logger.debug(`Deleted shipping term by ID ${id}`)
+        logger.debug(`Deleted shipping term by Code ${code}`)
         logger
             .child({ LogMetadata: `ShippingTermsRepository.delete` })
             .debug('Shipping terms data')
 
         return this.client.shippingTerms.delete({
-            where: { id }
+            where: { code }
         })
     }
 }

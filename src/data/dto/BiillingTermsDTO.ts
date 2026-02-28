@@ -2,9 +2,9 @@ import { z } from 'zod'
 import { type BillingTermsModel } from '../../generated/prisma/models'
 
 export const billingTermsSchema = z.object({
-    id: z.number(),
     code: z.string().max(50),
-    description: z.string().max(255).optional()
+    description: z.string().max(255),
+    dueDays: z.number().int().positive()
 })
 
 export type IBillingTermsDTO = z.infer<typeof billingTermsSchema>
@@ -15,15 +15,16 @@ export const BillingTermsDTO = {
     //     return billingTermsSchema.parse({
     //         id: billingTermsEntity.id,
     //         code: billingTermsEntity.code,
-    //         description: billingTermsEntity.description
+    //         description: billingTermsEntity.description,
+    //         dueDays: billingTermsEntity.dueDays
     //     })
     // }
 
     toDto: (billingTermsEntity: BillingTermsModel): IBillingTermsDTO => {
         return {
-            id: billingTermsEntity.id,
             code: billingTermsEntity.code,
-            description: billingTermsEntity.description
+            description: billingTermsEntity.description,
+            dueDays: billingTermsEntity.dueDays
         }
     }
 }

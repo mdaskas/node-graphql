@@ -41,21 +41,6 @@ export class BillingTermsRepository
         return billingTerms.map(BillingTermsDTO.toDto)
     }
 
-    async findById(id: number): Promise<IBillingTermsDTO> {
-        const billingTerm = await this.client.billingTerms.findUnique({
-            where: { id }
-        })
-
-        if (!billingTerm)
-            throw new EntityNotFoundError({
-                message: `BillingTerms for ID ${id} not found`,
-                statusCode: 404,
-                code: 'ERR_NF'
-            })
-
-        return BillingTermsDTO.toDto(billingTerm)
-    }
-
     async findByCode(code: string): Promise<IBillingTermsDTO> {
         const billingTerm = await this.client.billingTerms.findUnique({
             where: { code }
@@ -84,15 +69,15 @@ export class BillingTermsRepository
     }
 
     async update(
-        id: number,
+        code: string,
         input: UpdateBillingTermsInput
     ): Promise<IBillingTermsDTO> {
         const billingTerm = await this.client.billingTerms.update({
-            where: { id },
+            where: { code },
             data: input
         })
 
-        logger.debug(`Updated billing term by ID ${id}`)
+        logger.debug(`Updated billing term by Code ${code}`)
         logger
             .child({ LogMetadata: `BillingTermsRepository.update` })
             .debug('Billing terms data')
@@ -100,14 +85,14 @@ export class BillingTermsRepository
         return BillingTermsDTO.toDto(billingTerm)
     }
 
-    async delete(id: number): Promise<IBillingTermsDTO | null> {
-        const billingTerms = await this.findById(id)
+    async delete(code: string): Promise<IBillingTermsDTO | null> {
+        const billingTerms = await this.findByCode(code)
         if (!billingTerms) return null
         const deletedBillingTerm = await this.client.billingTerms.delete({
-            where: { id }
+            where: { code }
         })
 
-        logger.debug(`Deleted billing term by ID ${id}`)
+        logger.debug(`Deleted billing term by Code ${code}`)
         logger
             .child({ LogMetadata: `BillingTermsRepository.delete` })
             .debug('Billing terms data')
