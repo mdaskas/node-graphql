@@ -3,11 +3,11 @@ import type {
     BillingTermsModel,
     ShippingTermsModel,
     AddressModel
-} from '../generated/prisma/models'
+} from '../../generated/prisma/models'
 import type {
     CreateCustomerInput,
     UpdateCustomerInput
-} from './CustomerRepository'
+} from '@repo/CustomerRepository'
 
 export type CustomerWithRelations = CustomerModel & {
     billingTerms: BillingTermsModel | null

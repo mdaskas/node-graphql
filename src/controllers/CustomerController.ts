@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { ICustomerService } from '../services/interfaces/ICustomerService'
-import type { ICustomerController } from './interfaces/ICustomerController'
+import type { ICustomerService } from '@servicetypes/ICustomerService'
+import type { ICustomerController } from '@controllertypes/ICustomerController'
 import type {
     CreateCustomerInput,
     UpdateCustomerInput

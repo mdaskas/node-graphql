@@ -1,8 +1,8 @@
-import type { CustomerWithRelations } from '../repositories/ICustomerRepository'
+import type { CustomerWithRelations } from '@repotypes/ICustomerRepository'
 import type {
     CreateCustomerInput,
     UpdateCustomerInput
-} from '../../repositories/CustomerRepository'
+} from '@repo/CustomerRepository'
 
 export interface ICustomerService {
     getAll(limit?: number, offset?: number): Promise<CustomerWithRelations[]>

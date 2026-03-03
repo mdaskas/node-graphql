@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma'
-import type { IBaseRepository } from './interfaces/IBaseRepository'
+import type { IBaseRepository } from '@repotypes/IBaseRepository'
 
 export class BaseRepository implements IBaseRepository {
     protected defaultLimit = 10

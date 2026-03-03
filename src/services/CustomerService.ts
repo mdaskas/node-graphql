@@ -1,9 +1,9 @@
-import type { ICustomerRepository } from '../repositories/interfaces/ICustomerRepository'
+import type { ICustomerRepository } from '@repotypes/ICustomerRepository'
 import type {
     CreateCustomerInput,
     UpdateCustomerInput
 } from '../repositories/CustomerRepository'
-import type { ICustomerService } from './interfaces/ICustomerService'
+import type { ICustomerService } from '@servicetypes/ICustomerService'
 import logger from '../utils/logger'
 
 export class CustomerService implements ICustomerService {

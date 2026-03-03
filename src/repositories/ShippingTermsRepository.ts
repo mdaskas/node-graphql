@@ -4,18 +4,21 @@ import {
     ShippingTermsDTO,
     type IShippingTermsDTO
 } from '../data/dto/ShippingTermsDTO'
-import { BaseRepository } from './BaseRespository'
-import type { IShippingTermsRepository } from './interfaces/IShippingTermsRepository'
+import { BaseRepository } from '@repo/BaseRespository'
+import type { IShippingTermsRepository } from '@repotypes/IShippingTermsRepository'
 
-export interface CreateShippingTermsInput {
+export interface ShippingTerms {
     code: string
     description: string
+    createdAt: Date
+    updatedAt: Date
 }
+export type CreateShippingTermsInput = Omit<
+    ShippingTerms,
+    'createdAt' | 'updatedAt'
+>
 
-export interface UpdateShippingTermsInput {
-    code?: string
-    description?: string
-}
+export type UpdateShippingTermsInput = Partial<CreateShippingTermsInput>
 
 export class ShippingTermsRepository
     extends BaseRepository

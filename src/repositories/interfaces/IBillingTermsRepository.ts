@@ -1,8 +1,8 @@
-import type { IBillingTermsDTO } from '../data/dto/BiillingTermsDTO'
+import type { IBillingTermsDTO } from '../../data/dto/BiillingTermsDTO'
 import type {
     CreateBillingTermsInput,
     UpdateBillingTermsInput
-} from './BillingTermsRepository'
+} from '@repo/BillingTermsRepository'
 
 export interface IBillingTermsRepository {
     findAll(limit?: number, offset?: number): Promise<IBillingTermsDTO[]>

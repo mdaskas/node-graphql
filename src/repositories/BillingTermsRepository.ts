@@ -4,20 +4,22 @@ import {
     BillingTermsDTO,
     type IBillingTermsDTO
 } from '../data/dto/BiillingTermsDTO'
-import { BaseRepository } from './BaseRespository'
-import type { IBillingTermsRepository } from './interfaces//IBillingTermsRepository'
+import { BaseRepository } from '@repo/BaseRespository'
+import type { IBillingTermsRepository } from '@repotypes/IBillingTermsRepository'
 
-export interface CreateBillingTermsInput {
+export interface BillingTerms {
     code: string
     description: string
     dueDays: number
+    createdAt: Date
+    updatedAt: Date
 }
+export type CreateBillingTermsInput = Omit<
+    BillingTerms,
+    'createdAt' | 'updatedAt'
+>
 
-export interface UpdateBillingTermsInput {
-    code?: string
-    description?: string
-    dueDays?: number
-}
+export type UpdateBillingTermsInput = Partial<CreateBillingTermsInput>
 
 export class BillingTermsRepository
     extends BaseRepository

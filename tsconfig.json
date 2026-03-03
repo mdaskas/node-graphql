@@ -2,12 +2,18 @@
     "extends": "@tsconfig/node24/tsconfig.json",
     // Visit https://aka.ms/tsconfig to read more about this file
     "compilerOptions": {
-        // File Layout
         //"rootDir": "./src",
         "outDir": "./dist",
+        "paths": {
+            "@/*": ["./src/*"],
+            "@repo/*": ["./src/repositories/*"],
+            "@repotypes/*": ["./src/repositories/interfaces/*"],
+            "@services/*": ["./src/services/*"],
+            "@servicetypes/*": ["./src/services/interfaces/*"],
+            "@controllers/*": ["./src/controllers/*"],
+            "@controllertypes/*": ["./src/controllers/interfaces/*"]
+        },
 
-        // Environment Settings
-        // See also https://aka.ms/tsconfig/module
         "module": "esnext", // nodenext
         "moduleResolution": "bundler",
         "target": "esnext", // ES2023

@@ -2,7 +2,7 @@ import type { IBillingTermsDTO } from '../../data/dto/BiillingTermsDTO'
 import type {
     CreateBillingTermsInput,
     UpdateBillingTermsInput
-} from '../../repositories/BillingTermsRepository'
+} from '@repo/BillingTermsRepository'
 
 export interface IBillingTermsService {
     getAll(limit?: number, offset?: number): Promise<IBillingTermsDTO[]>

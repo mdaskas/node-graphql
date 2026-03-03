@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { IShippingTermsService } from '../services/interfaces/IShippingTermsService'
-import type { IShippingTermsController } from './interfaces/IShippingTermsController'
+import type { IShippingTermsService } from '@servicetypes/IShippingTermsService'
+import type { IShippingTermsController } from '@controllertypes/IShippingTermsController'
 import type {
     CreateShippingTermsInput,
     UpdateShippingTermsInput

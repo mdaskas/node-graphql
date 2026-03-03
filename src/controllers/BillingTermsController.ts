@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { IBillingTermsService } from '../services/interfaces/IBillingTermsService'
-import type { IBillingTermsController } from './interfaces/IBillingTermsController'
+import type { IBillingTermsService } from '@servicetypes/IBillingTermsService'
+import type { IBillingTermsController } from '@controllertypes/IBillingTermsController'
 import type {
     CreateBillingTermsInput,
     UpdateBillingTermsInput

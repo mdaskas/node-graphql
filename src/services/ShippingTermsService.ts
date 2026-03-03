@@ -1,10 +1,10 @@
-import type { IShippingTermsRepository } from '../repositories/interfaces/IShippingTermsRepository'
+import type { IShippingTermsRepository } from '@repotypes/IShippingTermsRepository'
 import type {
     CreateShippingTermsInput,
     UpdateShippingTermsInput
 } from '../repositories/ShippingTermsRepository'
 import type { IShippingTermsDTO } from '../data/dto/ShippingTermsDTO'
-import type { IShippingTermsService } from './interfaces/IShippingTermsService'
+import type { IShippingTermsService } from '@servicetypes/IShippingTermsService'
 import logger from '../utils/logger'
 
 export class ShippingTermsService implements IShippingTermsService {

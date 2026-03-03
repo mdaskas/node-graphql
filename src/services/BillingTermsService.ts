@@ -1,10 +1,10 @@
-import type { IBillingTermsRepository } from '../repositories/interfaces/IBillingTermsRepository'
+import type { IBillingTermsRepository } from '@repotypes/IBillingTermsRepository'
 import type {
     CreateBillingTermsInput,
     UpdateBillingTermsInput
 } from '../repositories/BillingTermsRepository'
 import type { IBillingTermsDTO } from '../data/dto/BiillingTermsDTO'
-import type { IBillingTermsService } from './interfaces/IBillingTermsService'
+import type { IBillingTermsService } from '@servicetypes/IBillingTermsService'
 import logger from '../utils/logger'
 
 export class BillingTermsService implements IBillingTermsService {

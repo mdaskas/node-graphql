@@ -2,7 +2,7 @@ import type { IShippingTermsDTO } from '../../data/dto/ShippingTermsDTO'
 import type {
     CreateShippingTermsInput,
     UpdateShippingTermsInput
-} from '../../repositories/ShippingTermsRepository'
+} from '@repo/ShippingTermsRepository'
 
 export interface IShippingTermsService {
     getAll(limit?: number, offset?: number): Promise<IShippingTermsDTO[]>
