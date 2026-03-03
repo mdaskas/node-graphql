@@ -15,8 +15,8 @@ export interface CreateCustomerInput {
     name: string
     email: string
     phone?: string
-    billingTermsId?: number
-    shippingTermsId?: number
+    billingTermsCode?: string
+    shippingTermsCode?: string
     billToAddressId?: number
     shipToAddressIds?: number[]
 }
@@ -26,8 +26,8 @@ export interface UpdateCustomerInput {
     name?: string
     email?: string
     phone?: string
-    billingTermsId?: number
-    shippingTermsId?: number
+    billingTermsCode?: string
+    shippingTermsCode?: string
     billToAddressId?: number
     shipToAddressIds?: number[]
 }
