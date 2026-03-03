@@ -7,6 +7,11 @@ import cors from 'cors'
 import { typeDefs, resolvers } from './schema'
 import morganMiddleware from './middleware/morgan-middleware'
 import errorHandler from './middleware/error-handler'
+import customerRoutes from './routes/customerRoutes'
+import shippingTermsRoutes from './routes/shippingTermsRoutes'
+import billingTermsRoutes from './routes/billingTermsRoutes'
+import swaggerUi from 'swagger-ui-express'
+import swaggerSpec from './swagger'
 
 interface MyContext {
     token?: string
@@ -28,18 +33,23 @@ const server = new ApolloServer<MyContext>({
 await server.start()
 
 app.disable('x-powered-by') // Security best practice: hide Express usage
+app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(
     '/graphql',
     morganMiddleware,
-    cors(),
-    express.urlencoded({ extended: true }),
-    express.json(),
     // expressMiddleware accepts the same arguments:
     // an Apollo Server instance and optional configuration options
     expressMiddleware(server, {
         context: async ({ req }) => ({ token: req.headers.authorization })
     })
 )
+
+app.use('/api/customers', customerRoutes)
+app.use('/api/shipping-terms', shippingTermsRoutes)
+app.use('/api/billing-terms', billingTermsRoutes)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(errorHandler)
 

@@ -1,4 +1,4 @@
-import type { IBillingTermsDTO } from '../dto/BiillingTermsDTO'
+import type { IBillingTermsDTO } from '../data/dto/BiillingTermsDTO'
 import type {
     CreateBillingTermsInput,
     UpdateBillingTermsInput

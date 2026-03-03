@@ -2,17 +2,17 @@ import {
     CustomerRepository,
     type CreateCustomerInput,
     type UpdateCustomerInput
-} from './data/repositories/CustomerRepository'
+} from './repositories/CustomerRepository'
 import {
     BillingTermsRepository,
     type CreateBillingTermsInput,
     type UpdateBillingTermsInput
-} from './data/repositories/BillingTermsRepository'
+} from './repositories/BillingTermsRepository'
 import {
     ShippingTermsRepository,
     type CreateShippingTermsInput,
     type UpdateShippingTermsInput
-} from './data/repositories/ShippingTermsRepository'
+} from './repositories/ShippingTermsRepository'
 
 const customerRepo = new CustomerRepository()
 const billingTermsRepo = new BillingTermsRepository()

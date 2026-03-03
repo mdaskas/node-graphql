@@ -1,8 +1,11 @@
-import EntityNotFoundError from '../../errors/EntityNotFoundError'
-import logger from '../../utils/logger'
-import { BillingTermsDTO, type IBillingTermsDTO } from '../dto/BiillingTermsDTO'
+import EntityNotFoundError from '../errors/EntityNotFoundError'
+import logger from '../utils/logger'
+import {
+    BillingTermsDTO,
+    type IBillingTermsDTO
+} from '../data/dto/BiillingTermsDTO'
 import { BaseRepository } from './BaseRespository'
-import type { IBillingTermsRepository } from './IBillingTermsRepository'
+import type { IBillingTermsRepository } from './interfaces//IBillingTermsRepository'
 
 export interface CreateBillingTermsInput {
     code: string

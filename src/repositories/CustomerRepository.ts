@@ -1,7 +1,7 @@
-import EntityNotFoundError from '../../errors/EntityNotFoundError'
-import logger from '../../utils/logger'
+import EntityNotFoundError from '../errors/EntityNotFoundError'
+import logger from '../utils/logger'
 import { BaseRepository } from './BaseRespository'
-import type { ICustomerRepository } from './ICustomerRepository'
+import type { ICustomerRepository } from './interfaces/ICustomerRepository'
 
 const customerInclude = {
     billingTerms: true,

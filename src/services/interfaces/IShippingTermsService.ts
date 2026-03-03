@@ -1,12 +1,12 @@
-import type { IShippingTermsDTO } from '../dto/ShippingTermsDTO'
+import type { IShippingTermsDTO } from '../../data/dto/ShippingTermsDTO'
 import type {
     CreateShippingTermsInput,
     UpdateShippingTermsInput
-} from './ShippingTermsRepository'
+} from '../../repositories/ShippingTermsRepository'
 
-export interface IShippingTermsRepository {
-    findAll(limit?: number, offset?: number): Promise<IShippingTermsDTO[]>
-    findByCode(code: string): Promise<IShippingTermsDTO | null>
+export interface IShippingTermsService {
+    getAll(limit?: number, offset?: number): Promise<IShippingTermsDTO[]>
+    getByCode(code: string): Promise<IShippingTermsDTO>
     create(input: CreateShippingTermsInput): Promise<IShippingTermsDTO>
     update(
         code: string,

@@ -1,11 +1,11 @@
-import EntityNotFoundError from '../../errors/EntityNotFoundError'
-import logger from '../../utils/logger'
+import EntityNotFoundError from '../errors/EntityNotFoundError'
+import logger from '../utils/logger'
 import {
     ShippingTermsDTO,
     type IShippingTermsDTO
-} from '../dto/ShippingTermsDTO'
+} from '../data/dto/ShippingTermsDTO'
 import { BaseRepository } from './BaseRespository'
-import type { IShippingTermsRepository } from './IShippingTermsRepository'
+import type { IShippingTermsRepository } from './interfaces/IShippingTermsRepository'
 
 export interface CreateShippingTermsInput {
     code: string
