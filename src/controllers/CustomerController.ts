@@ -13,8 +13,8 @@ const createCustomerSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Invalid email address'),
     phone: z.string().optional(),
-    billingTermsId: z.number().int().positive().optional(),
-    shippingTermsId: z.number().int().positive().optional(),
+    billingTermId: z.number().int().positive().optional(),
+    shippingTermId: z.number().int().positive().optional(),
     billToAddressId: z.number().int().positive().optional(),
     shipToAddressIds: z.array(z.number().int().positive()).optional()
 })
@@ -24,8 +24,8 @@ const updateCustomerSchema = z.object({
     name: z.string().min(1).optional(),
     email: z.string().email('Invalid email address').optional(),
     phone: z.string().optional(),
-    billingTermsId: z.number().int().positive().optional(),
-    shippingTermsId: z.number().int().positive().optional(),
+    billingTermId: z.number().int().positive().optional(),
+    shippingTermId: z.number().int().positive().optional(),
     billToAddressId: z.number().int().positive().optional(),
     shipToAddressIds: z.array(z.number().int().positive()).optional()
 })

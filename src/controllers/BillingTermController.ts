@@ -1,29 +1,29 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { IBillingTermsService } from '@servicetypes/IBillingTermsService'
-import type { IBillingTermsController } from '@controllertypes/IBillingTermsController'
+import type { IBillingTermService } from '@servicetypes/IBillingTermService'
+import type { IBillingTermController } from '@controllertypes/IBillingTermController'
 import type {
-    CreateBillingTermsInput,
-    UpdateBillingTermsInput
-} from '../repositories/BillingTermsRepository'
+    CreateBillingTermInput,
+    UpdateBillingTermInput
+} from '@/repositories/BillingTermRepository'
 import { z } from 'zod'
 import logger from '../utils/logger'
 
-const createBillingTermsSchema = z.object({
+const createBillingTermSchema = z.object({
     code: z.string().min(1, 'Code is required').max(50),
     description: z.string().min(1, 'Description is required').max(255),
     dueDays: z.number().int().positive('Due days must be a positive integer')
 })
 
-const updateBillingTermsSchema = z.object({
+const updateBillingTermSchema = z.object({
     code: z.string().min(1).max(50).optional(),
     description: z.string().min(1).max(255).optional(),
     dueDays: z.number().int().positive().optional()
 })
 
-export class BillingTermsController implements IBillingTermsController {
-    private service: IBillingTermsService
+export class BillingTermController implements IBillingTermController {
+    private service: IBillingTermService
 
-    constructor(service: IBillingTermsService) {
+    constructor(service: IBillingTermService) {
         this.service = service
     }
 
@@ -40,8 +40,8 @@ export class BillingTermsController implements IBillingTermsController {
                 ? parseInt(req.query.offset as string)
                 : undefined
 
-            const billingTerms = await this.service.getAll(limit, offset)
-            res.json(billingTerms)
+            const billingTerm = await this.service.getAll(limit, offset)
+            res.json(billingTerm)
         } catch (error) {
             next(error)
         }
@@ -77,7 +77,7 @@ export class BillingTermsController implements IBillingTermsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const parsed = createBillingTermsSchema.safeParse(req.body)
+            const parsed = createBillingTermSchema.safeParse(req.body)
             if (!parsed.success) {
                 res.status(400).json({
                     error: {
@@ -92,7 +92,7 @@ export class BillingTermsController implements IBillingTermsController {
             }
 
             const billingTerm = await this.service.create(
-                parsed.data as CreateBillingTermsInput
+                parsed.data as CreateBillingTermInput
             )
             logger.info(`Billing term created with code: ${parsed.data.code}`)
             res.status(201).json(billingTerm)
@@ -118,7 +118,7 @@ export class BillingTermsController implements IBillingTermsController {
                 return
             }
 
-            const parsed = updateBillingTermsSchema.safeParse(req.body)
+            const parsed = updateBillingTermSchema.safeParse(req.body)
             if (!parsed.success) {
                 res.status(400).json({
                     error: {
@@ -134,7 +134,7 @@ export class BillingTermsController implements IBillingTermsController {
 
             const billingTerm = await this.service.update(
                 code,
-                parsed.data as UpdateBillingTermsInput
+                parsed.data as UpdateBillingTermInput
             )
             logger.info(`Billing term updated with code: ${code}`)
             res.json(billingTerm)

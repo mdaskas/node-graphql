@@ -1,44 +1,42 @@
 import { Router } from 'express'
-import { ShippingTermsController } from '../controllers/ShippingTermsController'
-import { ShippingTermsService } from '../services/ShippingTermsService'
-import { ShippingTermsRepository } from '../repositories/ShippingTermsRepository'
+import { BillingTermController } from '../controllers/BillingTermController'
+import { BillingTermService } from '../services/BillingTermService'
+import { BillingTermRepository } from '../repositories/BillingTermRepository'
 
 const router = Router()
 
-const shippingTermsRepository = new ShippingTermsRepository()
-const shippingTermsService = new ShippingTermsService(shippingTermsRepository)
-const shippingTermsController = new ShippingTermsController(
-    shippingTermsService
-)
+const billingTermRepository = new BillingTermRepository()
+const billingTermService = new BillingTermService(billingTermRepository)
+const billingTermController = new BillingTermController(billingTermService)
 
 /**
  * @openapi
- * /api/shipping-terms:
+ * /api/billing-terms:
  *   get:
  *     tags:
- *       - Shipping Terms
- *     summary: Get all shipping terms
- *     description: Retrieve a paginated list of shipping terms.
+ *       - Billing Terms
+ *     summary: Get all billing terms
+ *     description: Retrieve a paginated list of billing terms.
  *     parameters:
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
- *         description: Maximum number of shipping terms to return
+ *         description: Maximum number of billing terms to return
  *       - in: query
  *         name: offset
  *         schema:
  *           type: integer
- *         description: Number of shipping terms to skip
+ *         description: Number of billing terms to skip
  *     responses:
  *       200:
- *         description: A list of shipping terms
+ *         description: A list of billing terms
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/ShippingTerms'
+ *                 $ref: '#/components/schemas/BillingTerms'
  *       500:
  *         description: Internal server error
  *         content:
@@ -46,30 +44,30 @@ const shippingTermsController = new ShippingTermsController(
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/', shippingTermsController.getAll)
+router.get('/', billingTermController.getAll)
 
 /**
  * @openapi
- * /api/shipping-terms/{code}:
+ * /api/billing-terms/{code}:
  *   get:
  *     tags:
- *       - Shipping Terms
- *     summary: Get shipping terms by code
- *     description: Retrieve a single shipping term by its code.
+ *       - Billing Terms
+ *     summary: Get billing terms by code
+ *     description: Retrieve a single billing term by its code.
  *     parameters:
  *       - in: path
  *         name: code
  *         required: true
  *         schema:
  *           type: string
- *         description: The shipping terms code
+ *         description: The billing terms code
  *     responses:
  *       200:
- *         description: The shipping term
+ *         description: The billing term
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ShippingTerms'
+ *               $ref: '#/components/schemas/BillingTerms'
  *       400:
  *         description: Code parameter is required
  *         content:
@@ -77,35 +75,35 @@ router.get('/', shippingTermsController.getAll)
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Shipping term not found
+ *         description: Billing term not found
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.get('/:code', shippingTermsController.getByCode)
+router.get('/:code', billingTermController.getByCode)
 
 /**
  * @openapi
- * /api/shipping-terms:
+ * /api/billing-terms:
  *   post:
  *     tags:
- *       - Shipping Terms
- *     summary: Create a new shipping term
- *     description: Create a new shipping term with the provided data.
+ *       - Billing Terms
+ *     summary: Create a new billing term
+ *     description: Create a new billing term with the provided data.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateShippingTermsInput'
+ *             $ref: '#/components/schemas/CreateBillingTermsInput'
  *     responses:
  *       201:
- *         description: The created shipping term
+ *         description: The created billing term
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ShippingTerms'
+ *               $ref: '#/components/schemas/BillingTerms'
  *       400:
  *         description: Validation error
  *         content:
@@ -113,36 +111,36 @@ router.get('/:code', shippingTermsController.getByCode)
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
  */
-router.post('/', shippingTermsController.create)
+router.post('/', billingTermController.create)
 
 /**
  * @openapi
- * /api/shipping-terms/{code}:
+ * /api/billing-terms/{code}:
  *   put:
  *     tags:
- *       - Shipping Terms
- *     summary: Update a shipping term
- *     description: Update an existing shipping term by code.
+ *       - Billing Terms
+ *     summary: Update a billing term
+ *     description: Update an existing billing term by code.
  *     parameters:
  *       - in: path
  *         name: code
  *         required: true
  *         schema:
  *           type: string
- *         description: The shipping terms code
+ *         description: The billing terms code
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UpdateShippingTermsInput'
+ *             $ref: '#/components/schemas/UpdateBillingTermsInput'
  *     responses:
  *       200:
- *         description: The updated shipping term
+ *         description: The updated billing term
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ShippingTerms'
+ *               $ref: '#/components/schemas/BillingTerms'
  *       400:
  *         description: Validation error or missing code
  *         content:
@@ -150,36 +148,36 @@ router.post('/', shippingTermsController.create)
  *             schema:
  *               $ref: '#/components/schemas/ValidationErrorResponse'
  *       404:
- *         description: Shipping term not found
+ *         description: Billing term not found
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.put('/:code', shippingTermsController.update)
+router.put('/:code', billingTermController.update)
 
 /**
  * @openapi
- * /api/shipping-terms/{code}:
+ * /api/billing-terms/{code}:
  *   delete:
  *     tags:
- *       - Shipping Terms
- *     summary: Delete a shipping term
- *     description: Delete a shipping term by code.
+ *       - Billing Terms
+ *     summary: Delete a billing term
+ *     description: Delete a billing term by code.
  *     parameters:
  *       - in: path
  *         name: code
  *         required: true
  *         schema:
  *           type: string
- *         description: The shipping terms code
+ *         description: The billing terms code
  *     responses:
  *       200:
- *         description: The deleted shipping term
+ *         description: The deleted billing term
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ShippingTerms'
+ *               $ref: '#/components/schemas/BillingTerms'
  *       400:
  *         description: Missing code parameter
  *         content:
@@ -187,12 +185,12 @@ router.put('/:code', shippingTermsController.update)
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  *       404:
- *         description: Shipping term not found
+ *         description: Billing term not found
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.delete('/:code', shippingTermsController.delete)
+router.delete('/:code', billingTermController.delete)
 
 export default router

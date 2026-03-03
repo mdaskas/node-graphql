@@ -1,34 +1,33 @@
 import EntityNotFoundError from '../errors/EntityNotFoundError'
 import logger from '../utils/logger'
 import {
-    ShippingTermsDTO,
-    type IShippingTermsDTO
-} from '../data/dto/ShippingTermsDTO'
+    ShippingTermDTO,
+    type IShippingTermDTO
+} from '../data/dto/ShippingTermDTO'
 import { BaseRepository } from '@repo/BaseRespository'
-import type { IShippingTermsRepository } from '@repotypes/IShippingTermsRepository'
+import type { IShippingTermRepository } from '@repotypes/IShippingTermRepository'
+import type { IEntityBase } from './interfaces/IEntityBase'
 
-export interface ShippingTerms {
+export interface ShippingTerm extends IEntityBase {
     code: string
     description: string
-    createdAt: Date
-    updatedAt: Date
 }
-export type CreateShippingTermsInput = Omit<
-    ShippingTerms,
-    'createdAt' | 'updatedAt'
+export type CreateShippingTermInput = Omit<
+    ShippingTerm,
+    'id' | 'createdAt' | 'updatedAt'
 >
 
-export type UpdateShippingTermsInput = Partial<CreateShippingTermsInput>
+export type UpdateShippingTermInput = Partial<CreateShippingTermInput>
 
-export class ShippingTermsRepository
+export class ShippingTermRepository
     extends BaseRepository
-    implements IShippingTermsRepository
+    implements IShippingTermRepository
 {
     async findAll(
         limit = this.defaultLimit,
         offset = this.defaultOffset
-    ): Promise<IShippingTermsDTO[]> {
-        const shippingTerms = await this.client.shippingTerms.findMany({
+    ): Promise<IShippingTermDTO[]> {
+        const shippingTerms = await this.client.shippingTerm.findMany({
             skip: offset,
             take: limit
         })
@@ -41,11 +40,11 @@ export class ShippingTermsRepository
             .child({ LogMetadata: `ShippingTermsRepository.findAll` })
             .debug('Shipping terms data')
 
-        return shippingTerms.map(ShippingTermsDTO.toDto)
+        return shippingTerms.map(ShippingTermDTO.toDto)
     }
 
-    async findByCode(code: string): Promise<IShippingTermsDTO> {
-        const shippingTerm = await this.client.shippingTerms.findUnique({
+    async findByCode(code: string): Promise<IShippingTermDTO> {
+        const shippingTerm = await this.client.shippingTerm.findUnique({
             where: { code }
         })
 
@@ -61,22 +60,22 @@ export class ShippingTermsRepository
             .child({ LogMetadata: `ShippingTermsRepository.findByCode` })
             .debug('Shipping terms data')
 
-        return ShippingTermsDTO.toDto(shippingTerm)
+        return ShippingTermDTO.toDto(shippingTerm)
     }
 
-    async create(input: CreateShippingTermsInput): Promise<IShippingTermsDTO> {
-        const shippingTerm = await this.client.shippingTerms.create({
+    async create(input: CreateShippingTermInput): Promise<IShippingTermDTO> {
+        const shippingTerm = await this.client.shippingTerm.create({
             data: input
         })
 
-        return ShippingTermsDTO.toDto(shippingTerm)
+        return ShippingTermDTO.toDto(shippingTerm)
     }
 
     async update(
         code: string,
-        input: UpdateShippingTermsInput
-    ): Promise<IShippingTermsDTO> {
-        const shippingTerm = await this.client.shippingTerms.update({
+        input: UpdateShippingTermInput
+    ): Promise<IShippingTermDTO> {
+        const shippingTerm = await this.client.shippingTerm.update({
             where: { code },
             data: input
         })
@@ -86,7 +85,7 @@ export class ShippingTermsRepository
             .child({ LogMetadata: `ShippingTermsRepository.update` })
             .debug('Shipping terms data')
 
-        return ShippingTermsDTO.toDto(shippingTerm)
+        return ShippingTermDTO.toDto(shippingTerm)
     }
 
     async delete(code: string) {
@@ -98,7 +97,7 @@ export class ShippingTermsRepository
             .child({ LogMetadata: `ShippingTermsRepository.delete` })
             .debug('Shipping terms data')
 
-        return this.client.shippingTerms.delete({
+        return this.client.shippingTerm.delete({
             where: { code }
         })
     }

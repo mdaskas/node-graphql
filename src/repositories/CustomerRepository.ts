@@ -2,6 +2,7 @@ import EntityNotFoundError from '../errors/EntityNotFoundError'
 import logger from '../utils/logger'
 import { BaseRepository } from '@repo/BaseRespository'
 import type { ICustomerRepository } from '@repotypes/ICustomerRepository'
+import type { IEntityBase } from './interfaces/IEntityBase'
 
 const customerInclude = {
     billingTerms: true,
@@ -10,7 +11,7 @@ const customerInclude = {
     shipToAddresses: true
 }
 
-export interface Customer {
+export interface Customer extends IEntityBase {
     code: string
     name: string
     email: string
@@ -19,11 +20,9 @@ export interface Customer {
     shippingTermsCode?: string
     billToAddressId?: number
     shipToAddressIds?: number[]
-    createdAt: Date
-    updatedAt: Date
 }
 
-export type CreateCustomerInput = Omit<Customer, 'createdAt' | 'updatedAt'>
+export type CreateCustomerInput = Omit<Customer, 'id' |'createdAt' | 'updatedAt'>
 
 export type UpdateCustomerInput = Partial<CreateCustomerInput>
 

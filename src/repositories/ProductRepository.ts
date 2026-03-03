@@ -2,22 +2,21 @@ import EntityNotFoundError from '../errors/EntityNotFoundError'
 import logger from '../utils/logger'
 import { BaseRepository } from '@repo/BaseRespository'
 import type { IProductRepository } from '@repotypes/IProductRepository'
+import type { IEntityBase } from './interfaces/IEntityBase'
 
 const productInclude = {
     category: true
 }
 
-export interface Product {
+export interface Product extends IEntityBase {
     code: string
     description: string
     price: number
     categoryId: number
     stock: number
-    createdAt?: Date
-    updatedAt?: Date
 }
 
-export type CreateProductInput = Omit<Product, 'createdAt' | 'updatedAt'>
+export type CreateProductInput = Omit<Product, 'id' | 'createdAt' | 'updatedAt'>
 
 export type UpdateProductInput = Partial<CreateProductInput>
 

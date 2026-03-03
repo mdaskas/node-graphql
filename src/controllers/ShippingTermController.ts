@@ -1,27 +1,27 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { IShippingTermsService } from '@servicetypes/IShippingTermsService'
-import type { IShippingTermsController } from '@controllertypes/IShippingTermsController'
+import type { IShippingTermService } from '@servicetypes/IShippingTermService'
+import type { IShippingTermController } from '@/controllers/interfaces/IShippingTermController'
 import type {
-    CreateShippingTermsInput,
-    UpdateShippingTermsInput
-} from '../repositories/ShippingTermsRepository'
+    CreateShippingTermInput,
+    UpdateShippingTermInput
+} from '../repositories/ShippingTermRepository'
 import { z } from 'zod'
 import logger from '../utils/logger'
 
-const createShippingTermsSchema = z.object({
+const createShippingTermSchema = z.object({
     code: z.string().min(1, 'Code is required').max(50),
     description: z.string().min(1, 'Description is required').max(255)
 })
 
-const updateShippingTermsSchema = z.object({
+const updateShippingTermSchema = z.object({
     code: z.string().min(1).max(50).optional(),
     description: z.string().min(1).max(255).optional()
 })
 
-export class ShippingTermsController implements IShippingTermsController {
-    private service: IShippingTermsService
+export class ShippingTermController implements IShippingTermController {
+    private service: IShippingTermService
 
-    constructor(service: IShippingTermsService) {
+    constructor(service: IShippingTermService) {
         this.service = service
     }
 
@@ -75,7 +75,7 @@ export class ShippingTermsController implements IShippingTermsController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const parsed = createShippingTermsSchema.safeParse(req.body)
+            const parsed = createShippingTermSchema.safeParse(req.body)
             if (!parsed.success) {
                 res.status(400).json({
                     error: {
@@ -90,7 +90,7 @@ export class ShippingTermsController implements IShippingTermsController {
             }
 
             const shippingTerm = await this.service.create(
-                parsed.data as CreateShippingTermsInput
+                parsed.data as CreateShippingTermInput
             )
             logger.info(`Shipping term created with code: ${parsed.data.code}`)
             res.status(201).json(shippingTerm)
@@ -116,7 +116,7 @@ export class ShippingTermsController implements IShippingTermsController {
                 return
             }
 
-            const parsed = updateShippingTermsSchema.safeParse(req.body)
+            const parsed = updateShippingTermSchema.safeParse(req.body)
             if (!parsed.success) {
                 res.status(400).json({
                     error: {
@@ -132,7 +132,7 @@ export class ShippingTermsController implements IShippingTermsController {
 
             const shippingTerm = await this.service.update(
                 code,
-                parsed.data as UpdateShippingTermsInput
+                parsed.data as UpdateShippingTermInput
             )
             logger.info(`Shipping term updated with code: ${code}`)
             res.json(shippingTerm)

@@ -1,45 +1,46 @@
 model Customer {
-    id        Int      @id @default(autoincrement())
-    code      String   @unique
-    name      String
-    email     String   @unique
-    phone     String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id    Int     @id @default(autoincrement())
+    code  String  @unique
+    name  String
+    email String  @unique
+    phone String?
 
-    billingTermsCode String?
-    billingTerms     BillingTerms? @relation(fields: [billingTermsCode], references: [code])
+    billingTermId Int?
+    billingTerm   BillingTerm? @relation(fields: [billingTermId], references: [id])
 
-    shippingTermsCode String?
-    shippingTerms     ShippingTerms? @relation(fields: [shippingTermsCode], references: [code])
+    shippingTermId Int?
+    shippingTerm   ShippingTerm? @relation(fields: [shippingTermId], references: [id])
 
     billToAddressId Int?     @unique
     billToAddress   Address? @relation("BillTo", fields: [billToAddressId], references: [id])
 
     shipToAddresses Address[] @relation("ShipTo")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Address {
-    id        Int      @id @default(autoincrement())
-    street1   String
-    street2   String?
-    city      String
-    state     String
-    zip       String
-    country   String   @default("US")
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    id      Int     @id @default(autoincrement())
+    street1 String
+    street2 String?
+    city    String
+    state   String
+    zip     String
+    country String  @default("US")
 
-    // Ship-to: many addresses per customer
     shipToCustomerId Int?
     shipToCustomer   Customer? @relation("ShipTo", fields: [shipToCustomerId], references: [id])
 
-    // Bill-to: one-to-one (inverse side)
     billToCustomer Customer? @relation("BillTo")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
-model BillingTerms {
-    code        String   @id
+model BillingTerm {
+    id          Int      @id @default(autoincrement())
+    code        String   @unique
     description String
     dueDays     Int
     createdAt   DateTime @default(now())
@@ -48,8 +49,9 @@ model BillingTerms {
     customers Customer[]
 }
 
-model ShippingTerms {
-    code        String   @id
+model ShippingTerm {
+    id          Int      @id @default(autoincrement())
+    code        String   @unique
     description String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt

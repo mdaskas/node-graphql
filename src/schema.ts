@@ -2,31 +2,31 @@ import {
     CustomerRepository,
     type CreateCustomerInput,
     type UpdateCustomerInput
-} from './repositories/CustomerRepository'
+} from '@repo/CustomerRepository'
 import {
-    BillingTermsRepository,
-    type CreateBillingTermsInput,
-    type UpdateBillingTermsInput
-} from './repositories/BillingTermsRepository'
+    BillingTermRepository,
+    type CreateBillingTermInput,
+    type UpdateBillingTermInput
+} from '@repo/BillingTermRepository'
 import {
-    ShippingTermsRepository,
-    type CreateShippingTermsInput,
-    type UpdateShippingTermsInput
-} from './repositories/ShippingTermsRepository'
+    ShippingTermRepository,
+    type CreateShippingTermInput,
+    type UpdateShippingTermInput
+} from '@repo/ShippingTermRepository'
 import {
     ProductRepository,
     type CreateProductInput,
     type UpdateProductInput
-} from './repositories/ProductRepository'
+} from '@repo/ProductRepository'
 import {
     ProductCategoryRepository,
     type CreateProductCategoryInput,
     type UpdateProductCategoryInput
-} from './repositories/ProductCategoryRepository'
+} from '@repo/ProductCategoryRepository'
 
 const customerRepo = new CustomerRepository()
-const billingTermsRepo = new BillingTermsRepository()
-const shippingTermsRepo = new ShippingTermsRepository()
+const billingTermRepo = new BillingTermRepository()
+const shippingTermRepo = new ShippingTermRepository()
 const productRepo = new ProductRepository()
 const productCategoryRepo = new ProductCategoryRepository()
 
@@ -41,14 +41,16 @@ type Address {
   country: String!
 }
 
-type BillingTerms {
-  code: ID!
+type BillingTerm {
+  id: ID!
+  code: String!
   description: String!
   dueDays: Int!
 }
 
-type ShippingTerms {
-  code: ID!
+type ShippingTerm {
+  id: ID!
+  code: String!
   description: String!
 }
 
@@ -58,8 +60,8 @@ type Customer {
   name: String!
   email: String!
   phone: String
-  billingTerms: BillingTerms
-  shippingTerms: ShippingTerms
+  billingTerm: BillingTerm
+  shippingTerm: ShippingTerm
   billToAddress: Address
   shipToAddresses: [Address!]!
 }
@@ -83,10 +85,10 @@ type Product {
 type Query {
   customers: [Customer!]!
   customer(id: ID!): Customer
-  billingTerms: [BillingTerms!]!
-  billingTerm(id: ID!): BillingTerms
-  shippingTerms: [ShippingTerms!]!
-  shippingTerm(id: ID!): ShippingTerms
+  billingTerms: [BillingTerm!]!
+  billingTerm(id: ID!): BillingTerm
+  shippingTerms: [ShippingTerm!]!
+  shippingTerm(id: ID!): ShippingTerm
   products: [Product!]!
   product(id: ID!): Product
   productCategories: [ProductCategory!]!
@@ -98,13 +100,13 @@ type Mutation {
   updateCustomer(id: ID!, input: UpdateCustomerInput!): Customer
   deleteCustomer(id: ID!): Customer
 
-  createBillingTerms(input: CreateBillingTermsInput!): BillingTerms!
-  updateBillingTerms(code: ID!, input: UpdateBillingTermsInput!): BillingTerms
-  deleteBillingTerms(code: ID!): BillingTerms
+  createBillingTerm(input: CreateBillingTermInput!): BillingTerm!
+  updateBillingTerm(code: ID!, input: UpdateBillingTermInput!): BillingTerm
+  deleteBillingTerm(code: ID!): BillingTerm
 
-  createShippingTerms(input: CreateShippingTermsInput!): ShippingTerms!
-  updateShippingTerms(code: ID!, input: UpdateShippingTermsInput!): ShippingTerms
-  deleteShippingTerms(code: ID!): ShippingTerms
+  createShippingTerm(input: CreateShippingTermInput!): ShippingTerm!
+  updateShippingTerm(code: ID!, input: UpdateShippingTermInput!): ShippingTerm
+  deleteShippingTerm(code: ID!): ShippingTerm
 
   createProduct(input: CreateProductInput!): Product!
   updateProduct(id: ID!, input: UpdateProductInput!): Product
@@ -120,8 +122,8 @@ input CreateCustomerInput {
 	name: String!
 	email: String!
 	phone: String
-	billingTermsCode:  String
-	shippingTermsCode: String
+	billingTermCode:  Int
+	shippingTermCode: Int
 	billToAddressId: Int
 	shipToAddressIds: [Int!]
 }
@@ -131,29 +133,31 @@ input UpdateCustomerInput {
 	name: String
 	email: String
 	phone: String
-	billingTermsCode: String
-	shippingTermsCode: String
+	billingTermCode: Int
+	shippingTermCode: Int
 	billToAddressId: Int
 	shipToAddressIds: [Int!]
 }
 
-input CreateBillingTermsInput {
+input CreateBillingTermInput {
 	code: String!
 	description: String!
 	dueDays: Int!
 }
 
-input UpdateBillingTermsInput {
+input UpdateBillingTermInput {
+	code: String
 	description: String
 	dueDays: Int
 }
 
-input CreateShippingTermsInput {
+input CreateShippingTermInput {
 	code: String!
 	description: String!
 }
 
-input UpdateShippingTermsInput {
+input UpdateShippingTermInput {
+	code: String
 	description: String
 }
 
@@ -191,12 +195,12 @@ const resolvers = {
         },
         customer: (_: any, { id }: { id: number }) =>
             customerRepo.findById(parseInt(id.toString())),
-        billingTerms: () => billingTermsRepo.findAll(),
+        billingTerms: () => billingTermRepo.findAll(),
         billingTerm: (_: any, { code }: { code: string }) =>
-            billingTermsRepo.findByCode(code),
-        shippingTerms: () => shippingTermsRepo.findAll(),
+            billingTermRepo.findByCode(code),
+        shippingTerms: () => shippingTermRepo.findAll(),
         shippingTerm: (_: any, { code }: { code: string }) =>
-            shippingTermsRepo.findByCode(code),
+            shippingTermRepo.findByCode(code),
         products: () => productRepo.findAll(),
         product: (_: any, { id }: { id: number }) =>
             productRepo.findById(parseInt(id.toString())),
@@ -214,27 +218,27 @@ const resolvers = {
         deleteCustomer: (_: any, { id }: { id: number }) =>
             customerRepo.delete(id),
 
-        createBillingTerms: (
+        createBillingTerm: (
             _: any,
-            { input }: { input: CreateBillingTermsInput }
-        ) => billingTermsRepo.create(input),
-        updateBillingTerms: (
+            { input }: { input: CreateBillingTermInput }
+        ) => billingTermRepo.create(input),
+        updateBillingTerm: (
             _: any,
-            { code, input }: { code: string; input: UpdateBillingTermsInput }
-        ) => billingTermsRepo.update(code, input),
-        deleteBillingTerms: (_: any, { code }: { code: string }) =>
-            billingTermsRepo.delete(code),
+            { code, input }: { code: string; input: UpdateBillingTermInput }
+        ) => billingTermRepo.update(code, input),
+        deleteBillingTerm: (_: any, { code }: { code: string }) =>
+            billingTermRepo.delete(code),
 
-        createShippingTerms: (
+        createShippingTerm: (
             _: any,
-            { input }: { input: CreateShippingTermsInput }
-        ) => shippingTermsRepo.create(input),
-        updateShippingTerms: (
+            { input }: { input: CreateShippingTermInput }
+        ) => shippingTermRepo.create(input),
+        updateShippingTerm: (
             _: any,
-            { code, input }: { code: string; input: UpdateShippingTermsInput }
-        ) => shippingTermsRepo.update(code, input),
-        deleteShippingTerms: (_: any, { code }: { code: string }) =>
-            shippingTermsRepo.delete(code),
+            { code, input }: { code: string; input: UpdateShippingTermInput }
+        ) => shippingTermRepo.update(code, input),
+        deleteShippingTerm: (_: any, { code }: { code: string }) =>
+            shippingTermRepo.delete(code),
 
         createProduct: (_: any, { input }: { input: CreateProductInput }) =>
             productRepo.create(input),

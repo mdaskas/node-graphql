@@ -13,8 +13,6 @@ interface Address extends CreateAddressInput {
     id: number
     shipToCustomerId?: number
 }
-const MAX_SHIPPING_TERMS = 3
-const MAX_BILLING_TERMS = 4
 
 let nextAddressId = 10000
 export const createRandomAddress = (): Address => {
@@ -40,8 +38,22 @@ export const createRandomCustomer = () => {
         name: faker.company.name(),
         email: faker.internet.email(),
         phone: faker.phone.number(),
-        billingTerms: { connect: { code: 'NET15' } },
-        shippingTerms: { connect: { code: 'COLLECT' } },
+        billingTerm: {
+            connect: {
+                id: faker.number.int({
+                    min: 1,
+                    max: 4
+                })
+            }
+        },
+        shippingTerm: {
+            connect: {
+                id: faker.number.int({
+                    min: 1,
+                    max: 4
+                })
+            }
+        },
         billToAddress: {
             create: {
                 street1: faker.location.streetAddress(),
