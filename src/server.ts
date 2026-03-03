@@ -10,6 +10,8 @@ import errorHandler from './middleware/error-handler'
 import customerRoutes from './routes/customerRoutes'
 import shippingTermsRoutes from './routes/shippingTermsRoutes'
 import billingTermsRoutes from './routes/billingTermsRoutes'
+import productRoutes from './routes/productRoutes'
+import productCategoryRoutes from './routes/productCategoryRoutes'
 import swaggerUi from 'swagger-ui-express'
 import swaggerSpec from './swagger'
 
@@ -49,6 +51,8 @@ app.use(
 app.use('/api/customers', customerRoutes)
 app.use('/api/shipping-terms', shippingTermsRoutes)
 app.use('/api/billing-terms', billingTermsRoutes)
+app.use('/api/products', productRoutes)
+app.use('/api/product-categories', productCategoryRoutes)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(errorHandler)

@@ -13,10 +13,22 @@ import {
     type CreateShippingTermsInput,
     type UpdateShippingTermsInput
 } from './repositories/ShippingTermsRepository'
+import {
+    ProductRepository,
+    type CreateProductInput,
+    type UpdateProductInput
+} from './repositories/ProductRepository'
+import {
+    ProductCategoryRepository,
+    type CreateProductCategoryInput,
+    type UpdateProductCategoryInput
+} from './repositories/ProductCategoryRepository'
 
 const customerRepo = new CustomerRepository()
 const billingTermsRepo = new BillingTermsRepository()
 const shippingTermsRepo = new ShippingTermsRepository()
+const productRepo = new ProductRepository()
+const productCategoryRepo = new ProductCategoryRepository()
 
 const typeDefs = `#graphql
 type Address {
@@ -52,6 +64,22 @@ type Customer {
   shipToAddresses: [Address!]!
 }
 
+type ProductCategory {
+  id: ID!
+  code: String!
+  description: String!
+}
+
+type Product {
+  id: ID!
+  code: String!
+  description: String!
+  price: Float!
+  categoryId: Int!
+  category: ProductCategory!
+  stock: Int!
+}
+
 type Query {
   customers: [Customer!]!
   customer(id: ID!): Customer
@@ -59,6 +87,10 @@ type Query {
   billingTerm(id: ID!): BillingTerms
   shippingTerms: [ShippingTerms!]!
   shippingTerm(id: ID!): ShippingTerms
+  products: [Product!]!
+  product(id: ID!): Product
+  productCategories: [ProductCategory!]!
+  productCategory(id: ID!): ProductCategory
 }
 
 type Mutation {
@@ -73,6 +105,14 @@ type Mutation {
   createShippingTerms(input: CreateShippingTermsInput!): ShippingTerms!
   updateShippingTerms(code: ID!, input: UpdateShippingTermsInput!): ShippingTerms
   deleteShippingTerms(code: ID!): ShippingTerms
+
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product
+  deleteProduct(id: ID!): Product
+
+  createProductCategory(input: CreateProductCategoryInput!): ProductCategory!
+  updateProductCategory(id: ID!, input: UpdateProductCategoryInput!): ProductCategory
+  deleteProductCategory(id: ID!): ProductCategory
 }
 
 input CreateCustomerInput {
@@ -116,6 +156,32 @@ input CreateShippingTermsInput {
 input UpdateShippingTermsInput {
 	description: String
 }
+
+input CreateProductInput {
+	code: String!
+	description: String!
+	price: Float!
+	categoryId: Int!
+	stock: Int!
+}
+
+input UpdateProductInput {
+	code: String
+	description: String
+	price: Float
+	categoryId: Int
+	stock: Int
+}
+
+input CreateProductCategoryInput {
+	code: String!
+	description: String!
+}
+
+input UpdateProductCategoryInput {
+	code: String
+	description: String
+}
 `
 
 const resolvers = {
@@ -130,7 +196,13 @@ const resolvers = {
             billingTermsRepo.findByCode(code),
         shippingTerms: () => shippingTermsRepo.findAll(),
         shippingTerm: (_: any, { code }: { code: string }) =>
-            shippingTermsRepo.findByCode(code)
+            shippingTermsRepo.findByCode(code),
+        products: () => productRepo.findAll(),
+        product: (_: any, { id }: { id: number }) =>
+            productRepo.findById(parseInt(id.toString())),
+        productCategories: () => productCategoryRepo.findAll(),
+        productCategory: (_: any, { id }: { id: number }) =>
+            productCategoryRepo.findById(parseInt(id.toString()))
     },
     Mutation: {
         createCustomer: (_: any, { input }: { input: CreateCustomerInput }) =>
@@ -162,7 +234,27 @@ const resolvers = {
             { code, input }: { code: string; input: UpdateShippingTermsInput }
         ) => shippingTermsRepo.update(code, input),
         deleteShippingTerms: (_: any, { code }: { code: string }) =>
-            shippingTermsRepo.delete(code)
+            shippingTermsRepo.delete(code),
+
+        createProduct: (_: any, { input }: { input: CreateProductInput }) =>
+            productRepo.create(input),
+        updateProduct: (
+            _: any,
+            { id, input }: { id: number; input: UpdateProductInput }
+        ) => productRepo.update(parseInt(id.toString()), input),
+        deleteProduct: (_: any, { id }: { id: number }) =>
+            productRepo.delete(parseInt(id.toString())),
+
+        createProductCategory: (
+            _: any,
+            { input }: { input: CreateProductCategoryInput }
+        ) => productCategoryRepo.create(input),
+        updateProductCategory: (
+            _: any,
+            { id, input }: { id: number; input: UpdateProductCategoryInput }
+        ) => productCategoryRepo.update(parseInt(id.toString()), input),
+        deleteProductCategory: (_: any, { id }: { id: number }) =>
+            productCategoryRepo.delete(parseInt(id.toString()))
     }
 }
 
