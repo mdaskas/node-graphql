@@ -1,6 +1,5 @@
 import EntityNotFoundError from '../errors/EntityNotFoundError'
-import logger from '../utils/logger'
-import { BaseRepository } from '@repo/BaseRespository'
+import { BaseRepository } from '@/repositories/BaseRepository'
 import type { IProductRepository } from '@repotypes/IProductRepository'
 import type { IEntityBase } from './interfaces/IEntityBase'
 
@@ -45,10 +44,7 @@ export class ProductRepository
                 code: 'ERR_NF'
             })
 
-        logger.debug(`Fetched product by ID ${id}`)
-        logger
-            .child({ LogMetadata: `ProductRepository.findById` })
-            .debug('Product data')
+        this.childLogger.debug(`findById: ID ${id}`)
 
         return product
     }

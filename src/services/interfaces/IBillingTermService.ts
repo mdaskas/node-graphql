@@ -6,11 +6,9 @@ import type {
 
 export interface IBillingTermService {
     getAll(limit?: number, offset?: number): Promise<IBillingTermDTO[]>
+    getById(id: number): Promise<IBillingTermDTO>
     getByCode(code: string): Promise<IBillingTermDTO>
     create(input: CreateBillingTermInput): Promise<IBillingTermDTO>
-    update(
-        code: string,
-        input: UpdateBillingTermInput
-    ): Promise<IBillingTermDTO>
-    delete(code: string): Promise<IBillingTermDTO | null>
+    update(id: number, input: UpdateBillingTermInput): Promise<IBillingTermDTO>
+    delete(id: number): Promise<IBillingTermDTO | null>
 }

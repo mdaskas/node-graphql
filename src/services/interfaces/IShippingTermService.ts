@@ -6,11 +6,12 @@ import type {
 
 export interface IShippingTermService {
     getAll(limit?: number, offset?: number): Promise<IShippingTermDTO[]>
+    getById(id: number): Promise<IShippingTermDTO>
     getByCode(code: string): Promise<IShippingTermDTO>
     create(input: CreateShippingTermInput): Promise<IShippingTermDTO>
     update(
-        code: string,
+        id: number,
         input: UpdateShippingTermInput
     ): Promise<IShippingTermDTO>
-    delete(code: string): Promise<IShippingTermDTO | null>
+    delete(id: number): Promise<IShippingTermDTO | null>
 }

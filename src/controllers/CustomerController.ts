@@ -81,6 +81,46 @@ export class CustomerController implements ICustomerController {
         }
     }
 
+    getByCodeOrEmail = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const code = req.query.code as string | undefined
+            const email = req.query.email as string | undefined
+
+            if (!code && !email) {
+                res.status(400).json({
+                    error: {
+                        message:
+                            'Either code or email query parameter is required',
+                        code: 'ERR_VALID'
+                    }
+                })
+                return
+            }
+
+            const customer = code
+                ? await this.service.getByCode(code)
+                : await this.service.getByEmail(email!)
+
+            if (!customer) {
+                res.status(404).json({
+                    error: {
+                        message: `Customer not found`,
+                        code: 'ERR_NF'
+                    }
+                })
+                return
+            }
+
+            res.json(customer)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     create = async (
         req: Request,
         res: Response,

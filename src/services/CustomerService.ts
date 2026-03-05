@@ -4,22 +4,23 @@ import type {
     UpdateCustomerInput
 } from '../repositories/CustomerRepository'
 import type { ICustomerService } from '@servicetypes/ICustomerService'
-import logger from '../utils/logger'
+import { BaseService } from './BaseService'
 
-export class CustomerService implements ICustomerService {
+export class CustomerService extends BaseService implements ICustomerService {
     private repository: ICustomerRepository
 
     constructor(repository: ICustomerRepository) {
+        super()
         this.repository = repository
     }
 
     async getAll(limit?: number, offset?: number) {
-        logger.debug('CustomerService.getAll called')
+        this.childLogger.debug('getAll called')
         return this.repository.findAll(limit, offset)
     }
 
     async getById(id: number) {
-        logger.debug(`CustomerService.getById called with id: ${id}`)
+        this.childLogger.debug(`getById called with id: ${id}`)
         const customer = await this.repository.findById(id)
         if (!customer) {
             throw new Error(`Customer with ID ${id} not found`)
@@ -28,27 +29,27 @@ export class CustomerService implements ICustomerService {
     }
 
     async getByCode(code: string) {
-        logger.debug(`CustomerService.getByCode called with code: ${code}`)
+        this.childLogger.debug(`getByCode: CODE: ${code}`)
         return this.repository.findByCode(code)
     }
 
     async getByEmail(email: string) {
-        logger.debug(`CustomerService.getByEmail called with email: ${email}`)
+        this.childLogger.debug(`getByEmail: EMAIL: ${email}`)
         return this.repository.findByEmail(email)
     }
 
     async create(input: CreateCustomerInput) {
-        logger.debug('CustomerService.create called')
+        this.childLogger.debug(`create: ${JSON.stringify(input)}`)
         return this.repository.create(input)
     }
 
     async update(id: number, input: UpdateCustomerInput) {
-        logger.debug(`CustomerService.update called with id: ${id}`)
+        this.childLogger.debug(`update: ID: ${id}`)
         return this.repository.update(id, input)
     }
 
     async delete(id: number) {
-        logger.debug(`CustomerService.delete called with id: ${id}`)
+        this.childLogger.debug(`delete: ID: ${id}`)
         return this.repository.delete(id)
     }
 }

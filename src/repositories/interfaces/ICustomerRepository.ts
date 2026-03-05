@@ -1,7 +1,7 @@
 import type {
     CustomerModel,
-    BillingTermsModel,
-    ShippingTermsModel,
+    BillingTermModel,
+    ShippingTermModel,
     AddressModel
 } from '../../generated/prisma/models'
 import type {
@@ -10,8 +10,8 @@ import type {
 } from '@repo/CustomerRepository'
 
 export type CustomerWithRelations = CustomerModel & {
-    billingTerms: BillingTermsModel | null
-    shippingTerms: ShippingTermsModel | null
+    billingTerm: BillingTermModel | null
+    shippingTerm: ShippingTermModel | null
     billToAddress: AddressModel | null
     shipToAddresses: AddressModel[]
 }

@@ -1,5 +1,5 @@
 class CustomError<C extends string> extends Error {
-  message: string
+  override message: string
   statusCode: number
   code?: C | undefined
 

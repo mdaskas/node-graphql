@@ -4,22 +4,23 @@ import type {
     UpdateProductInput
 } from '../repositories/ProductRepository'
 import type { IProductService } from '@servicetypes/IProductService'
-import logger from '../utils/logger'
+import { BaseService } from './BaseService'
 
-export class ProductService implements IProductService {
+export class ProductService extends BaseService implements IProductService {
     private repository: IProductRepository
 
     constructor(repository: IProductRepository) {
+        super()
         this.repository = repository
     }
 
     async getAll(limit?: number, offset?: number) {
-        logger.debug('ProductService.getAll called')
+        this.childLogger.debug('getAll called')
         return this.repository.findAll(limit, offset)
     }
 
     async getById(id: number) {
-        logger.debug(`ProductService.getById called with id: ${id}`)
+        this.childLogger.debug(`getById called with id: ${id}`)
         const product = await this.repository.findById(id)
         if (!product) {
             throw new Error(`Product with ID ${id} not found`)
@@ -28,22 +29,22 @@ export class ProductService implements IProductService {
     }
 
     async getByCode(code: string) {
-        logger.debug(`ProductService.getByCode called with code: ${code}`)
+        this.childLogger.debug(`getByCode called with code: ${code}`)
         return this.repository.findByCode(code)
     }
 
     async create(input: CreateProductInput) {
-        logger.debug('ProductService.create called')
+        this.childLogger.debug('create called')
         return this.repository.create(input)
     }
 
     async update(id: number, input: UpdateProductInput) {
-        logger.debug(`ProductService.update called with id: ${id}`)
+        this.childLogger.debug(`update called with id: ${id}`)
         return this.repository.update(id, input)
     }
 
     async delete(id: number) {
-        logger.debug(`ProductService.delete called with id: ${id}`)
+        this.childLogger.debug(`delete called with id: ${id}`)
         return this.repository.delete(id)
     }
 }

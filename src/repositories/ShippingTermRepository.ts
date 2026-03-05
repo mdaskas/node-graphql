@@ -1,10 +1,9 @@
 import EntityNotFoundError from '../errors/EntityNotFoundError'
-import logger from '../utils/logger'
 import {
     ShippingTermDTO,
     type IShippingTermDTO
 } from '../data/dto/ShippingTermDTO'
-import { BaseRepository } from '@repo/BaseRespository'
+import { BaseRepository } from '@/repositories/BaseRepository'
 import type { IShippingTermRepository } from '@repotypes/IShippingTermRepository'
 import type { IEntityBase } from './interfaces/IEntityBase'
 
@@ -31,16 +30,26 @@ export class ShippingTermRepository
             skip: offset,
             take: limit
         })
-        logger.debug('Fetched shipping terms', {
-            count: shippingTerms.length,
-            limit,
-            offset
-        })
-        logger
-            .child({ LogMetadata: `ShippingTermsRepository.findAll` })
-            .debug('Shipping terms data')
+        this.childLogger.debug('findAll')
 
         return shippingTerms.map(ShippingTermDTO.toDto)
+    }
+
+    async findById(id: number): Promise<IShippingTermDTO> {
+        const shippingTerm = await this.client.shippingTerm.findUnique({
+            where: { id }
+        })
+
+        if (!shippingTerm)
+            throw new EntityNotFoundError({
+                message: `ShippingTerms for id ${id} not found`,
+                statusCode: 404,
+                code: 'ERR_NF'
+            })
+
+        this.childLogger.debug(`findById: Id ${id}`)
+
+        return ShippingTermDTO.toDto(shippingTerm)
     }
 
     async findByCode(code: string): Promise<IShippingTermDTO> {
@@ -55,10 +64,7 @@ export class ShippingTermRepository
                 code: 'ERR_NF'
             })
 
-        logger.debug(`Fetched shipping term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `ShippingTermsRepository.findByCode` })
-            .debug('Shipping terms data')
+        this.childLogger.debug(`findByCode: Code ${code}`)
 
         return ShippingTermDTO.toDto(shippingTerm)
     }
@@ -68,37 +74,35 @@ export class ShippingTermRepository
             data: input
         })
 
+        this.childLogger.debug(
+            `create: Id ${shippingTerm.id}, Code: ${shippingTerm.code}`
+        )
+
         return ShippingTermDTO.toDto(shippingTerm)
     }
 
     async update(
-        code: string,
+        id: number,
         input: UpdateShippingTermInput
     ): Promise<IShippingTermDTO> {
         const shippingTerm = await this.client.shippingTerm.update({
-            where: { code },
+            where: { id },
             data: input
         })
 
-        logger.debug(`Updated shipping term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `ShippingTermsRepository.update` })
-            .debug('Shipping terms data')
+        this.childLogger.debug(`update: Id ${id}, Code: ${input.code}`)
 
         return ShippingTermDTO.toDto(shippingTerm)
     }
 
-    async delete(code: string) {
-        const shippingTerms = await this.findByCode(code)
+    async delete(id: number) {
+        const shippingTerms = await this.findById(id)
         if (!shippingTerms) return null
 
-        logger.debug(`Deleted shipping term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `ShippingTermsRepository.delete` })
-            .debug('Shipping terms data')
+        this.childLogger.debug(`delete: Id ${id}, Code: ${shippingTerms.code}`)
 
         return this.client.shippingTerm.delete({
-            where: { code }
+            where: { id }
         })
     }
 }

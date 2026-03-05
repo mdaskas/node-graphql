@@ -48,11 +48,11 @@ app.use(
     })
 )
 
-app.use('/api/customers', customerRoutes)
-app.use('/api/shipping-terms', shippingTermsRoutes)
-app.use('/api/billing-terms', billingTermsRoutes)
-app.use('/api/products', productRoutes)
-app.use('/api/product-categories', productCategoryRoutes)
+app.use('/api/v1/customers', customerRoutes)
+app.use('/api/v1/shipping-terms', shippingTermsRoutes)
+app.use('/api/v1/billing-terms', billingTermsRoutes)
+app.use('/api/v1/products', productRoutes)
+app.use('/api/v1/product-categories', productCategoryRoutes)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.use(errorHandler)

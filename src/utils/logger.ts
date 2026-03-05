@@ -22,9 +22,52 @@ const logger = winston.createLogger({
             ({ timestamp, level, message, logMetadata, stack }) => {
                 return `${timestamp} ${level}: ${logMetadata || ''} ${message} ${stack || ''}`
             }
-        )
+        ),
+        winston.format.json()
     ),
-    transports: [new winston.transports.Console()]
+    transports: [
+        new winston.transports.File({
+            filename: 'logs/error.log',
+            level: 'error'
+        }),
+
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.printf(
+                    ({ timestamp, level, message, logMetadata, stack }) => {
+                        return `${timestamp} ${level}: ${logMetadata || ''} ${message} ${stack || ''}`
+                    }
+                )
+            )
+        })
+    ],
+    exceptionHandlers: [
+        new winston.transports.File({ filename: 'logs/exceptions.log' }),
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.printf(
+                    ({ timestamp, level, message, logMetadata, stack }) => {
+                        return `${timestamp} ${level}: ${logMetadata || ''} ${message} ${stack || ''}`
+                    }
+                )
+            )
+        })
+    ],
+    rejectionHandlers: [
+        new winston.transports.File({ filename: 'logs/rejections.log' }),
+        new winston.transports.Console({
+            format: winston.format.combine(
+                winston.format.colorize(),
+                winston.format.printf(
+                    ({ timestamp, level, message, logMetadata, stack }) => {
+                        return `${timestamp} ${level}: ${logMetadata || ''} ${message} ${stack || ''}`
+                    }
+                )
+            )
+        })
+    ]
 })
 
 const fileRotateTransport = new DailyRotateFile({
@@ -41,6 +84,11 @@ const fileRotateTransport = new DailyRotateFile({
     )
 })
 
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console())
+}
 logger.add(fileRotateTransport)
 
+// TODO testing
+// throw new Error('Test error for logging')
 export default logger

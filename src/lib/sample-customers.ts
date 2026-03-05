@@ -32,7 +32,10 @@ export const createRandomAddress = (): Address => {
 }
 
 let nextCustomerId = 10000
-export const createRandomCustomer = () => {
+export const createRandomCustomer = (customerContext: {
+    billingTermIds: { min: number; max: number }
+    shippingTermIds: { min: number; max: number }
+}) => {
     return {
         code: `CUST-${nextCustomerId++}`,
         name: faker.company.name(),
@@ -41,16 +44,16 @@ export const createRandomCustomer = () => {
         billingTerm: {
             connect: {
                 id: faker.number.int({
-                    min: 1,
-                    max: 4
+                    min: customerContext.billingTermIds.min,
+                    max: customerContext.billingTermIds.max
                 })
             }
         },
         shippingTerm: {
             connect: {
                 id: faker.number.int({
-                    min: 1,
-                    max: 4
+                    min: customerContext.shippingTermIds.min,
+                    max: customerContext.shippingTermIds.max
                 })
             }
         },

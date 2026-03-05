@@ -59,9 +59,9 @@ type Customer {
   code: String!
   name: String!
   email: String!
-  phone: String
-  billingTerm: BillingTerm
-  shippingTerm: ShippingTerm
+  phone: String!
+  billingTermId: BillingTerm!
+  shippingTermId: ShippingTerm!
   billToAddress: Address
   shipToAddresses: [Address!]!
 }
@@ -122,8 +122,8 @@ input CreateCustomerInput {
 	name: String!
 	email: String!
 	phone: String
-	billingTermCode:  Int
-	shippingTermCode: Int
+	billingTermId:  Int
+	shippingTermId: Int
 	billToAddressId: Int
 	shipToAddressIds: [Int!]
 }
@@ -133,8 +133,8 @@ input UpdateCustomerInput {
 	name: String
 	email: String
 	phone: String
-	billingTermCode: Int
-	shippingTermCode: Int
+	billingTermId: Int
+	shippingTermId: Int
 	billToAddressId: Int
 	shipToAddressIds: [Int!]
 }

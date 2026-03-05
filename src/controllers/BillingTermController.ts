@@ -107,11 +107,11 @@ export class BillingTermController implements IBillingTermController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const code = req.params.code as string
-            if (!code) {
+            const id = Number(req.params.id)
+            if (isNaN(id)) {
                 res.status(400).json({
                     error: {
-                        message: 'Code parameter is required',
+                        message: 'ID parameter is required',
                         code: 'ERR_VALID'
                     }
                 })
@@ -133,10 +133,10 @@ export class BillingTermController implements IBillingTermController {
             }
 
             const billingTerm = await this.service.update(
-                code,
+                id,
                 parsed.data as UpdateBillingTermInput
             )
-            logger.info(`Billing term updated with code: ${code}`)
+            logger.info(`Billing term updated with ID: ${id}`)
             res.json(billingTerm)
         } catch (error) {
             next(error)
@@ -149,29 +149,29 @@ export class BillingTermController implements IBillingTermController {
         next: NextFunction
     ): Promise<void> => {
         try {
-            const code = req.params.code as string
-            if (!code) {
+            const id = Number(req.params.id)
+            if (isNaN(id)) {
                 res.status(400).json({
                     error: {
-                        message: 'Code parameter is required',
+                        message: 'ID parameter is required',
                         code: 'ERR_VALID'
                     }
                 })
                 return
             }
 
-            const billingTerm = await this.service.delete(code)
+            const billingTerm = await this.service.delete(id)
             if (!billingTerm) {
                 res.status(404).json({
                     error: {
-                        message: `Billing term with code ${code} not found`,
+                        message: `Billing term with ID ${id} not found`,
                         code: 'ERR_NF'
                     }
                 })
                 return
             }
 
-            logger.info(`Billing term deleted with code: ${code}`)
+            logger.info(`Billing term deleted with ID: ${id}`)
             res.json(billingTerm)
         } catch (error) {
             next(error)
