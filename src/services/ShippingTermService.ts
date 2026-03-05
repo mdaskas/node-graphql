@@ -9,18 +9,31 @@ import logger from '../utils/logger'
 
 export class ShippingTermService implements IShippingTermService {
     private repository: IShippingTermRepository
+    private readonly childLogger
 
     constructor(repository: IShippingTermRepository) {
         this.repository = repository
+        this.childLogger = logger.child({
+            defaultMeta: { service: `ShippingTermService` }
+        })
     }
 
     async getAll(limit?: number, offset?: number) {
-        logger.debug('ShippingTermService.getAll called')
+        this.childLogger.debug('ShippingTermService.getAll called')
         return this.repository.findAll(limit, offset)
     }
 
+    async getById(id: number): Promise<IShippingTermDTO> {
+        this.childLogger.debug(`ShippingTermService.getById: id: ${id}`)
+        const result = await this.repository.findById(id)
+        if (!result) {
+            throw new Error(`Shipping term with id ${id} not found`)
+        }
+        return result
+    }
+
     async getByCode(code: string): Promise<IShippingTermDTO> {
-        logger.debug(`ShippingTermService.getByCode called with code: ${code}`)
+        this.childLogger.debug(`ShippingTermService.getByCode: code: ${code}`)
         const result = await this.repository.findByCode(code)
         if (!result) {
             throw new Error(`Shipping term with code ${code} not found`)
@@ -29,17 +42,21 @@ export class ShippingTermService implements IShippingTermService {
     }
 
     async create(input: CreateShippingTermInput) {
-        logger.debug('ShippingTermService.create called')
+        this.childLogger.debug(
+            `ShippingTermService.create: ${JSON.stringify(input)}`
+        )
         return this.repository.create(input)
     }
 
-    async update(code: string, input: UpdateShippingTermInput) {
-        logger.debug(`ShippingTermService.update called with code: ${code}`)
-        return this.repository.update(code, input)
+    async update(id: number, input: UpdateShippingTermInput) {
+        this.childLogger.debug(
+            `ShippingTermService.update: id: ${id}, input: ${JSON.stringify(input)}`
+        )
+        return this.repository.update(id, input)
     }
 
-    async delete(code: string) {
-        logger.debug(`ShippingTermService.delete called with code: ${code}`)
-        return this.repository.delete(code)
+    async delete(id: number) {
+        this.childLogger.debug(`ShippingTermService.delete: id: ${id}`)
+        return this.repository.delete(id)
     }
 }

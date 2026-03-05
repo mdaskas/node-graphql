@@ -24,7 +24,13 @@ const logger = winston.createLogger({
             }
         )
     ),
-    transports: [new winston.transports.Console()]
+    transports: [
+        new winston.transports.File({
+            filename: 'logs/error.log',
+            level: 'error'
+        }),
+        new winston.transports.File({ filename: 'logs/combined.log' })
+    ]
 })
 
 const fileRotateTransport = new DailyRotateFile({
@@ -41,6 +47,9 @@ const fileRotateTransport = new DailyRotateFile({
     )
 })
 
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console())
+}
 logger.add(fileRotateTransport)
 
 export default logger

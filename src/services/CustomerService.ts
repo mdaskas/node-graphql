@@ -28,27 +28,27 @@ export class CustomerService implements ICustomerService {
     }
 
     async getByCode(code: string) {
-        logger.debug(`CustomerService.getByCode called with code: ${code}`)
+        logger.debug(`CustomerService.getByCode: CODE: ${code}`)
         return this.repository.findByCode(code)
     }
 
     async getByEmail(email: string) {
-        logger.debug(`CustomerService.getByEmail called with email: ${email}`)
+        logger.debug(`CustomerService.getByEmail: EMAIL: ${email}`)
         return this.repository.findByEmail(email)
     }
 
     async create(input: CreateCustomerInput) {
-        logger.debug('CustomerService.create called')
+        logger.debug(`CustomerService.create: ${JSON.stringify(input)}`)
         return this.repository.create(input)
     }
 
     async update(id: number, input: UpdateCustomerInput) {
-        logger.debug(`CustomerService.update called with id: ${id}`)
+        logger.debug(`CustomerService.update: ID: ${id}`)
         return this.repository.update(id, input)
     }
 
     async delete(id: number) {
-        logger.debug(`CustomerService.delete called with id: ${id}`)
+        logger.debug(`CustomerService.delete: ID: ${id}`)
         return this.repository.delete(id)
     }
 }

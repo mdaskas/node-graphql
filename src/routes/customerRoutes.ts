@@ -48,6 +48,53 @@ router.get('/', customerController.getAll)
 
 /**
  * @openapi
+ * /api/customers/search:
+ *   get:
+ *     tags:
+ *       - Customers
+ *     summary: Find a customer by code or email
+ *     description: Retrieve a single customer by their unique code or email address. Provide one of the two query parameters.
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         schema:
+ *           type: string
+ *         description: The customer code
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: The customer email address
+ *     responses:
+ *       200:
+ *         description: The matching customer
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Customer'
+ *       400:
+ *         description: Missing query parameter
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Customer not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/search', customerController.getByCodeOrEmail)
+
+/**
+ * @openapi
  * /api/customers/{id}:
  *   get:
  *     tags:

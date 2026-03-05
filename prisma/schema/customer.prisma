@@ -1,14 +1,14 @@
 model Customer {
-    id    Int     @id @default(autoincrement())
-    code  String  @unique
+    id    Int    @id @default(autoincrement())
+    code  String @unique
     name  String
-    email String  @unique
-    phone String?
+    email String @unique
+    phone String
 
-    billingTermId Int?
+    billingTermId Int
     billingTerm   BillingTerm? @relation(fields: [billingTermId], references: [id])
 
-    shippingTermId Int?
+    shippingTermId Int
     shippingTerm   ShippingTerm? @relation(fields: [shippingTermId], references: [id])
 
     billToAddressId Int?     @unique

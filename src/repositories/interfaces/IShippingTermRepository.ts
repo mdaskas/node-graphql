@@ -6,11 +6,12 @@ import type {
 
 export interface IShippingTermRepository {
     findAll(limit?: number, offset?: number): Promise<IShippingTermDTO[]>
+    findById(id: number): Promise<IShippingTermDTO | null>
     findByCode(code: string): Promise<IShippingTermDTO | null>
     create(input: CreateShippingTermInput): Promise<IShippingTermDTO>
     update(
-        code: string,
+        id: number,
         input: UpdateShippingTermInput
     ): Promise<IShippingTermDTO>
-    delete(code: string): Promise<IShippingTermDTO | null>
+    delete(id: number): Promise<IShippingTermDTO | null>
 }

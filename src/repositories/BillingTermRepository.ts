@@ -34,16 +34,31 @@ export class BillingTermRepository
             take: limit
         })
 
-        logger.debug('Fetched billing terms', {
+        logger.debug('BillingTermRepository.findAll: Fetched billing terms', {
             count: billingTerms.length,
             limit,
             offset
         })
-        logger
-            .child({ LogMetadata: `BillingTermRepository.findAll` })
-            .debug('Billing term data')
 
         return billingTerms.map(BillingTermDTO.toDto)
+    }
+
+    async findById(id: number): Promise<IBillingTermDTO> {
+        const billingTerm = await this.client.billingTerm.findUnique({
+            where: { id }
+        })
+        if (!billingTerm)
+            throw new EntityNotFoundError({
+                message: `BillingTerm for id ${id} not found`,
+                statusCode: 404,
+                code: 'ERR_NF'
+            })
+
+        logger.debug(
+            `BillingTermRepository.findById: id:${id}, code:${billingTerm.code}`
+        )
+
+        return BillingTermDTO.toDto(billingTerm)
     }
 
     async findByCode(code: string): Promise<IBillingTermDTO> {
@@ -57,15 +72,17 @@ export class BillingTermRepository
                 code: 'ERR_NF'
             })
 
-        logger.debug(`Fetched billing term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `BillingTermRepository.findByCode` })
-            .debug('Billing term data')
+        logger.debug(
+            `BillingTermRepository.findByCode: code:${billingTerm.code}`
+        )
 
         return BillingTermDTO.toDto(billingTerm)
     }
 
     async create(input: CreateBillingTermInput): Promise<IBillingTermDTO> {
+        logger.debug(
+            `BillingTermRepository.create: ${input.code} - ${input.description}`
+        )
         const billingTerm = await this.client.billingTerm.create({
             data: input
         })
@@ -74,33 +91,31 @@ export class BillingTermRepository
     }
 
     async update(
-        code: string,
+        id: number,
         input: UpdateBillingTermInput
     ): Promise<IBillingTermDTO> {
         const billingTerm = await this.client.billingTerm.update({
-            where: { code },
+            where: { id },
             data: input
         })
 
-        logger.debug(`Updated billing term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `BillingTermRepository.update` })
-            .debug('Billing term data')
+        logger.debug(
+            `BillingTermRepository.update: id: ${id}, code: ${billingTerm.code}`
+        )
 
         return BillingTermDTO.toDto(billingTerm)
     }
 
-    async delete(code: string): Promise<IBillingTermDTO | null> {
-        const billingTerm = await this.findByCode(code)
+    async delete(id: number): Promise<IBillingTermDTO | null> {
+        const billingTerm = await this.findById(id)
         if (!billingTerm) return null
         const deletedBillingTerm = await this.client.billingTerm.delete({
-            where: { code }
+            where: { id }
         })
 
-        logger.debug(`Deleted billing term by Code ${code}`)
-        logger
-            .child({ LogMetadata: `BillingTermRepository.delete` })
-            .debug('Billing term data')
+        logger.debug(
+            `BillingTermRepository.delete: id: ${id}, code: ${billingTerm.code}`
+        )
 
         return BillingTermDTO.toDto(deletedBillingTerm)
     }
