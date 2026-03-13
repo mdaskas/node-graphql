@@ -89,6 +89,4 @@ if (process.env.NODE_ENV !== 'production') {
 }
 logger.add(fileRotateTransport)
 
-// TODO testing
-// throw new Error('Test error for logging')
 export default logger

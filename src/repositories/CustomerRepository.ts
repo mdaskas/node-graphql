@@ -40,7 +40,6 @@ export class CustomerRepository
         })
 
         this.childLogger.debug('findAll: Fetched customers')
-        throw new Error('Test error for logging')
 
         return customers
     }
